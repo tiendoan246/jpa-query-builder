@@ -1,5 +1,6 @@
 package com.jpaquery.builder.demo.query.builder;
 
+import com.jpaquery.builder.demo.query.constant.SearchOperator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class ObjectInBuilder<T> implements QueryBuilder<T> {
     }
 
     @Override
-    public Predicate buildPredicate(CriteriaBuilder builder, Root<T> root, String key, Object value) {
-        return builder.and(root.get(key).in((List) value));
+    public Predicate buildPredicate(CriteriaBuilder builder, Root<T> root, String key, Object value, String entity) {
+        return builder.and(getObject(root, entity, key).in((List) value));
     }
 }

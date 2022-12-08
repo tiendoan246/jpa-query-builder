@@ -1,5 +1,8 @@
 package com.jpaquery.builder.demo.query.builder;
 
+import com.jpaquery.builder.demo.query.constant.DateConstant;
+import com.jpaquery.builder.demo.query.constant.SearchOperator;
+import com.jpaquery.builder.demo.query.utils.DateTimeUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,8 +31,8 @@ public class DateGreatThanBuilder<T> implements QueryBuilder<T> {
 
     @SneakyThrows
     @Override
-    public Predicate buildPredicate(CriteriaBuilder builder, Root<T> root, String key, Object value) {
-        return builder.greaterThan(root.get(key)
+    public Predicate buildPredicate(CriteriaBuilder builder, Root<T> root, String key, Object value, String entity) {
+        return builder.greaterThan(getObject(root, entity, key)
                 , DateTimeUtils.endOfDay(new SimpleDateFormat(DateConstant.DATE_FORMAT).parse(value.toString())));
     }
 }

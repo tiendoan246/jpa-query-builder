@@ -1,5 +1,9 @@
 package com.jpaquery.builder.demo.query.specification;
 
+import com.jpaquery.builder.demo.query.builder.QueryBuilder;
+import com.jpaquery.builder.demo.query.constant.LogicOperator;
+import com.jpaquery.builder.demo.query.constant.SearchOperator;
+import com.jpaquery.builder.demo.query.criteria.SearchCriteria;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -98,26 +102,54 @@ public class SpecificationBuilder<T> {
                             ? createSpecification(fieldName, key)
                             : group.or(createSpecification(fieldName, key));
                 }
-                break;
             }
         }
         return group;
     }
 
     private BaseSpecification<T> createSpecification(String fieldName, Map.Entry right) {
+        SearchOperator operator = SearchOperator.from(right.getKey().toString());
+        if (Objects.isNull(operator)) {
+            return createNestedSpecification(fieldName, right);
+        }
+
         return new BaseSpecification<T>(queryBuilders,
                 new SearchCriteria(
                         fieldName,
                         SearchOperator.from(right.getKey().toString()),
-                        right.getValue()));
+                        right.getValue()), null);
     }
 
     private BaseSpecification<T> createSpecification(Map.Entry left, Map.Entry right) {
+        SearchOperator operator = SearchOperator.from(right.getKey().toString());
+        if (Objects.isNull(operator)) {
+            return createNestedSpecification(left.getKey().toString(), right);
+        }
+
         return new BaseSpecification<T>(queryBuilders,
                 new SearchCriteria(
                         left.getKey().toString(),
                         SearchOperator.from(right.getKey().toString()),
-                        right.getValue()));
+                        right.getValue()), null);
+    }
+
+    private BaseSpecification<T> createNestedSpecification(String fieldName, Map.Entry right) {
+        Map params = (Map) right.getValue();
+        Set<Map.Entry<String, Object>> operators =  params.entrySet();
+        for (Map.Entry ops: operators) {
+            return new BaseSpecification<T>(queryBuilders,
+                    new SearchCriteria(
+                            right.getKey().toString(),
+                            SearchOperator.from(ops.getKey().toString()),
+                            ops.getValue()),
+                    fieldName);
+        }
+
+        return new BaseSpecification<T>(queryBuilders,
+                new SearchCriteria(
+                        fieldName,
+                        SearchOperator.from(right.getKey().toString()),
+                        right.getValue()), fieldName);
     }
 
     private boolean isOperator(String key) {

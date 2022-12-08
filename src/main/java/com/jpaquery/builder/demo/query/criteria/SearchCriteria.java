@@ -1,5 +1,6 @@
-package com.jpaquery.builder.demo.query;
+package com.jpaquery.builder.demo.query.criteria;
 
+import com.jpaquery.builder.demo.query.constant.SearchOperator;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

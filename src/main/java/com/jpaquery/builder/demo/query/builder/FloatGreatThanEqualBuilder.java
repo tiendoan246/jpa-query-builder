@@ -1,5 +1,6 @@
 package com.jpaquery.builder.demo.query.builder;
 
+import com.jpaquery.builder.demo.query.constant.SearchOperator;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class FloatGreatThanEqualBuilder<T> implements QueryBuilder<T> {
 
     @SneakyThrows
     @Override
-    public Predicate buildPredicate(CriteriaBuilder builder, Root<T> root, String key, Object value) {
-        return builder.greaterThanOrEqualTo(root.get(key), Float.parseFloat(value.toString()));
+    public Predicate buildPredicate(CriteriaBuilder builder, Root<T> root, String key, Object value, String entity) {
+        return builder.greaterThanOrEqualTo(getObject(root, entity, key), Float.parseFloat(value.toString()));
     }
 }
