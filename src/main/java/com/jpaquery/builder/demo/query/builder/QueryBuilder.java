@@ -1,7 +1,7 @@
 package com.jpaquery.builder.demo.query.builder;
 
 import com.jpaquery.builder.demo.query.constant.SearchOperator;
-import io.micrometer.core.instrument.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.JoinType;

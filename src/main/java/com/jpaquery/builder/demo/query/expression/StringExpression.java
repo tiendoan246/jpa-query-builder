@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class StringExpression {
     private String eq;
+    private String neq;
     private String contains;
     private List<String> in;
 }

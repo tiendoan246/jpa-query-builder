@@ -10,7 +10,8 @@ public enum SearchOperator {
     LTE ("lte"),
     BETWEEN ("between"),
     CONTAINS ("contains"),
-    IN ("in");
+    IN ("in"),
+    NEQ("neq");
 
     private String code;
 

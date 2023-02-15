@@ -8,9 +8,9 @@ import com.jpaquery.builder.demo.query.filter.SortFilter;
 import com.jpaquery.builder.demo.query.specification.BaseSpecification;
 import com.jpaquery.builder.demo.query.specification.SpecificationBuilder;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.util.Pair;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -31,6 +31,8 @@ public class SearchQueryBuilder<T> {
     private SortFilter sortFilter;
     private Specification<T> root;
     private Specification<T> withDelete;
+    private String nativeSqlCondition;
+    private String timezone;
 
     private SearchQueryBuilder(List<QueryBuilder<T>> queryBuilders) {
         this.queryBuilders = queryBuilders;
@@ -59,6 +61,11 @@ public class SearchQueryBuilder<T> {
         return this;
     }
 
+    public SearchQueryBuilder<T> withTimezone(String timezone) {
+        this.timezone = timezone;
+        return this;
+    }
+
     public SearchQueryBuilder<T> withDelete() {
         withDelete = new BaseSpecification<T>(
                 queryBuilders,
@@ -68,7 +75,8 @@ public class SearchQueryBuilder<T> {
 
     public Pair<Specification<T>, Pageable> build() {
         SpecificationBuilder<T> builder = SpecificationBuilder.createInstance(queryBuilders);
-        root = builder.buildSpecification(map);
+        root = builder.buildSpecification(map, timezone);
+        nativeSqlCondition = builder.getNativeSqlCondition();
 
         if (root != null && withDelete != null) {
             root = root.and(withDelete);
@@ -78,12 +86,20 @@ public class SearchQueryBuilder<T> {
             root = withDelete;
         }
 
+        if (withDelete != null) {
+            nativeSqlCondition = nativeSqlCondition + " and a.deleted = false";
+        }
+
         Pageable pageable = SortBuilder.builder()
                 .withPageFilter(pageFilter)
                 .withSort(sortFilter)
                 .build();
 
         return Pair.of(root, pageable);
+    }
+
+    public String getNativeSqlCondition() {
+        return nativeSqlCondition;
     }
 
     @SneakyThrows

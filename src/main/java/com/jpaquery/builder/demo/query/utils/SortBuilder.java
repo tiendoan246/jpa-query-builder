@@ -15,6 +15,7 @@ public class SortBuilder {
     private PageFilter pageFilter;
     private SortFilter sortFilter;
     private static final String DEFAULT_SORT_COLUMN_NAME = "createdAt";
+    private static final String ID_SORT_COLUMN_NAME = "resourceId";
 
     public static SortBuilder builder() {
         return new SortBuilder();
@@ -65,11 +66,17 @@ public class SortBuilder {
             }
         }
 
+        sortBy = sortBy.and(getSortId());
+
         return sortBy;
     }
 
     private Sort getDefaultSort() {
         return Sort.by(DEFAULT_SORT_COLUMN_NAME).ascending();
+    }
+
+    private Sort getSortId() {
+        return Sort.by(ID_SORT_COLUMN_NAME).ascending();
     }
 
     private PageFilter getPageFilter(PageFilter pageFilter) {
