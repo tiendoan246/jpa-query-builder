@@ -149,3 +149,21 @@ Example for user listing API
     }
 }
 ```
+
+# USE
+
+```shell
+// declare query objects
+private final List<QueryBuilder<YOUR JPA ENTITY>> queryBuilders;
+
+// build param
+Pair<Specification<YOUR JPA ENTITY>, Pageable> searchQueryBuilder = SearchQueryBuilder.builder(this.queryBuilders)
+                .withData(request.getFilter())
+                .withPage(request.getPage())
+                .withSort(request.getSort())
+                .withDelete()
+                .build();
+
+// query result
+Page<YOUR JPA ENTITY> page = this.<YOUR REPOSITORY>.findAll(searchQueryBuilder.getLeft(), searchQueryBuilder.getRight());
+```
