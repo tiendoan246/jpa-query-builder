@@ -57,7 +57,7 @@
 	<repositories>
 		<repository>
 			<id>github</id>
-			<name>GitHub Tinvio Apache Maven Packages</name>
+			<name>GitHub Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/tiendoan246/jpa-query-builder</url>
 		</repository>
 	</repositories>
