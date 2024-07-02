@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.jpa-query.builder</groupId>
 	<artifactId>jpa-query-builder</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.2</version>
 	<name>jpa-query-builder</name>
 	<description>jpa query builder</description>
 	<properties>
